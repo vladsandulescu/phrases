@@ -6,11 +6,6 @@ import java.util.List;
 
 public class TestPatterns {
 
-    final StringReader Text = new StringReader(
-            "This camera has great zoom and resolution.It comes with small and rechargeable batteries. " +
-                    "The camera case looks nice.I love the picture quality.The screen is wide and clear." +
-                    "The battery life is not long.");
-
     /**
      * 1. amod(N,A)→< N,A >
      */
