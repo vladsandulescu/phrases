@@ -3,57 +3,104 @@ import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.trees.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class Extract {
 
-    public static void main(String[] args) {
-        LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
+    final static String ParserModelPath = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";
 
-        Extract extract = new Extract();
-        extract.run(lp, "d:/review.txt");
+    public static void main(String[] args) {
+        try {
+            Extract.run(new FileReader("d:/review.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void run(LexicalizedParser lp, String filename) {
+    public static List<Pattern> run(Reader text) {
+
+        LexicalizedParser parser = LexicalizedParser.loadModel(ParserModelPath);
         TreebankLanguagePack tlp = new PennTreebankLanguagePack();
         GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-        for (List<HasWord> sentence : new DocumentPreprocessor(filename)) {
-            Tree parse = lp.apply(sentence);
-            GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
-            Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 
-            List<Pattern> patterns = new ArrayList<Pattern>();
+        List<Pattern> patterns = new ArrayList<Pattern>();
+        for (List<HasWord> sentence : new DocumentPreprocessor(text)) {
+            patterns.addAll(ExtractSentencePatterns(parser, gsf, sentence));
+        }
 
-            for (TypedDependency td : tdl) {
-                String reln = td.reln().toString();
-                String gov = td.gov().value();
-                String govTag = td.gov().label().tag();
-                int govIdx = td.gov().index();
-                String dep = td.dep().value();
-                String depTag = td.dep().label().tag();
-                int depIdx = td.dep().index();
-                boolean extra = td.extra();
+        return patterns;
+    }
 
-                Pattern.Relation relation = Pattern.asRelation(reln);
-                if (relation != null) {
-                    Pattern pattern = new Pattern(gov, govTag, dep, depTag, relation);
-                    if (pattern.isValid()) {
-                        patterns.add(pattern);
+    private static HashSet<Pattern> ExtractSentencePatterns(LexicalizedParser parser, GrammaticalStructureFactory gsf, List<HasWord> sentence) {
+        Tree parse = parser.apply(sentence);
+        GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
+        Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
 
-                        System.out.println(pattern.toString());
-                    }
-                }
-            }
+        List<Pattern> primary = ExtractPrimaryPatterns(tdl);
+        List<Pattern> combined = new ArrayList<Pattern>();
+        combined = ExtractCombinedPatterns(primary, primary);
+        combined.addAll(ExtractCombinedPatterns(combined, primary));
+        combined.addAll(ExtractCombinedPatterns(combined, primary));
 
-            List<Pattern> extra_patterns = new ArrayList<Pattern>();
-            for (Pattern pattern : patterns) {
-                Pattern extra_pattern = pattern.Combine(patterns);
-                if (extra_pattern != null) {
-                    extra_patterns.add(extra_pattern);
-                }
+        return FilterCombined(combined);
+    }
+
+    private static HashSet<Pattern> FilterCombined(List<Pattern> combined) {
+        return new HashSet<Pattern>(combined);
+
+        /* more post-processing is needed
+        TODO: keep only super-items
+         */
+    }
+
+    private static List<Pattern> ExtractPrimaryPatterns(Collection<TypedDependency> tdl) {
+        List<Pattern> primary = new ArrayList<Pattern>();
+
+        for (TypedDependency td : tdl) {
+            Pattern pattern = TryExtractPattern(td);
+            if (pattern != null) {
+                primary.add(pattern);
             }
         }
+
+        return primary;
+    }
+
+    private static Pattern TryExtractPattern(TypedDependency dependency) {
+        String rel = dependency.reln().toString();
+        String gov = dependency.gov().value();
+        String govTag = dependency.gov().label().tag();
+        String dep = dependency.dep().value();
+        String depTag = dependency.dep().label().tag();
+
+        Pattern.Relation relation = Pattern.asRelation(rel);
+        if (relation != null) {
+            Pattern pattern = new Pattern(gov, govTag, dep, depTag, relation);
+            if (pattern.isPrimaryPattern()) {
+
+                return pattern;
+            }
+        }
+
+        return null;
+    }
+
+    private static List<Pattern> ExtractCombinedPatterns(List<Pattern> combined, List<Pattern> primary) {
+        List<Pattern> results = new ArrayList<Pattern>();
+
+        for (Pattern pattern : combined) {
+            Pattern aspect = pattern.TryCombine(primary);
+            if (aspect != null) {
+                results.add(aspect);
+            }
+        }
+
+        return results;
     }
 }
