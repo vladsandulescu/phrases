@@ -6,17 +6,27 @@ public class Pattern {
     public String modifier;
     public String modifierTag;
     public Relation relation;
+    public Pattern mother;
+    public Pattern father;
 
     public Pattern(String head, String modifier, Relation relation) {
+
         this(head, null, modifier, null, relation);
     }
 
     public Pattern(String head, String headTag, String modifier, String modifierTag, Relation relation) {
+
+        this(head, headTag, modifier, modifierTag, relation, null, null);
+    }
+
+    public Pattern(String head, String headTag, String modifier, String modifierTag, Relation relation, Pattern mother, Pattern father) {
         this.head = head;
         this.headTag = headTag;
         this.modifier = modifier;
         this.modifierTag = modifierTag;
         this.relation = relation;
+        this.mother = mother;
+        this.father = father;
     }
 
     public static Relation asRelation(String str) {
@@ -74,7 +84,7 @@ public class Pattern {
     public Pattern TryCombine(List<Pattern> patterns) {
         switch (relation) {
             case amod:
-                return TryCombineAmod(patterns);
+                return TryCombineAmod();
             case acomp:
                 return TryCombineAcomp(patterns);
             case cop:
@@ -108,11 +118,11 @@ public class Pattern {
     private Pattern TryCombineAspectWithNn(Pattern pattern) {
         if (pattern.head == head && pattern.modifierTag.startsWith("NN")) {
 
-            return new Pattern(pattern.modifier + " " + head, headTag, modifier, modifierTag, Relation.aspect);
+            return new Pattern(pattern.modifier + " " + head, headTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
         if (pattern.modifier == head && pattern.headTag.startsWith("NN")) {
 
-            return new Pattern(head + " " + pattern.head, headTag, modifier, modifierTag, Relation.aspect);
+            return new Pattern(head + " " + pattern.head, headTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
 
         return null;
@@ -122,7 +132,7 @@ public class Pattern {
         if (pattern.head == modifier
                 && (pattern.modifier.equals("not") || pattern.modifier.equals("n't"))) {
 
-            return new Pattern(head, headTag, pattern.modifier + " " + modifier, pattern.modifierTag, Relation.aspect);
+            return new Pattern(head, headTag, pattern.modifier + " " + modifier, pattern.modifierTag, Relation.aspect, this, pattern);
         }
 
         return null;
@@ -131,13 +141,13 @@ public class Pattern {
     private Pattern TryCombineAspectWithConjAnd(Pattern pattern) {
         if (pattern.head == head && pattern.modifierTag.startsWith("NN")) {
 
-            return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect);
+            return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
         if (pattern.head == modifier
                 && (pattern.modifierTag.startsWith("JJ")
                 || pattern.modifierTag.startsWith("VB"))) {
 
-            return new Pattern(head, headTag, pattern.modifier, pattern.modifierTag, Relation.aspect);
+            return new Pattern(head, headTag, pattern.modifier, pattern.modifierTag, Relation.aspect, this, pattern);
         }
 
         return null;
@@ -150,7 +160,7 @@ public class Pattern {
                     && pattern.modifierTag.startsWith("PR")
                     && !pattern.modifier.equals(modifier)) {
 
-                return new Pattern(modifier, modifierTag, head, headTag, Relation.aspect);
+                return new Pattern(modifier, modifierTag, head, headTag, Relation.aspect, this, pattern);
             }
         }
 
@@ -164,7 +174,7 @@ public class Pattern {
                     && pattern.modifierTag.startsWith("NN")
                     && pattern.head.equals(head)) {
 
-                return new Pattern(pattern.modifier, pattern.modifierTag, head, headTag, Relation.aspect);
+                return new Pattern(pattern.modifier, pattern.modifierTag, head, headTag, Relation.aspect, this, pattern);
             }
         }
 
@@ -178,14 +188,14 @@ public class Pattern {
                     && pattern.modifierTag.startsWith("NN")
                     && pattern.head.equals(head)) {
 
-                return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect);
+                return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect, this, pattern);
             }
         }
 
         return null;
     }
 
-    private Pattern TryCombineAmod(List<Pattern> patterns) {
+    private Pattern TryCombineAmod() {
         return new Pattern(head, headTag, modifier, modifierTag, Relation.aspect);
     }
 
