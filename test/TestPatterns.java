@@ -59,7 +59,7 @@ public class TestPatterns {
     }
 
     /**
-     * 5. < h1,m > +conj and(h1,h2)→< h2,m >
+     * 5. < h1,m > +conj_and(h1,h2)→< h2,m >
      */
     @Test
     public void Pattern5() {
@@ -73,7 +73,7 @@ public class TestPatterns {
     }
 
     /**
-     * 6. < h,m1 > +conj and(m1,m2)→< h,m2 >
+     * 6. < h,m1 > +conj_and(m1,m2)→< h,m2 >
      */
     @Test
     public void Pattern6() {
