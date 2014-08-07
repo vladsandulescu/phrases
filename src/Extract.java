@@ -48,15 +48,23 @@ public class Extract {
         combined.addAll(ExtractCombinedPatterns(combined, primary));
         combined.addAll(ExtractCombinedPatterns(combined, primary));
 
-        return FilterCombined(combined);
+        return PruneCombinedPatterns(combined);
     }
 
-    private static HashSet<Pattern> FilterCombined(List<Pattern> combined) {
-        return new HashSet<Pattern>(combined);
+    private static HashSet<Pattern> PruneCombinedPatterns(List<Pattern> combined) {
+        List<Pattern> remove = new ArrayList<Pattern>();
 
-        /* more post-processing is needed
-        TODO: keep only super-items
-         */
+        HashSet<Pattern> patterns = new HashSet<Pattern>(combined);
+        for (Pattern pattern : patterns) {
+            if (patterns.contains(pattern.mother) && pattern.mother.relation != Pattern.Relation.conj_and
+                && pattern.father.relation != Pattern.Relation.conj_and) {
+                remove.add(pattern.mother);
+                remove.add(pattern.father);
+            }
+        }
+        patterns.removeAll(remove);
+
+        return patterns;
     }
 
     private static List<Pattern> ExtractPrimaryPatterns(Collection<TypedDependency> tdl) {
