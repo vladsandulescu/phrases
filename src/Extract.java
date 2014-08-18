@@ -25,13 +25,12 @@ public class Extract {
         return patterns;
     }
 
-    private static HashSet<Pattern> ExtractSentencePatterns(LexicalizedParser parser, GrammaticalStructureFactory gsf, List<HasWord> sentence) {
-        Tree parse = parser.apply(sentence);
-        GrammaticalStructure gs = gsf.newGrammaticalStructure(parse);
-        Collection<TypedDependency> tdl = gs.typedDependenciesCCprocessed();
+    private static HashSet<Pattern> ExtractSentencePatterns(CoreMap sentence) {
+        SemanticGraph semanticGraph = sentence.get(SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation.class);
 
-        List<Pattern> primary = ExtractPrimaryPatterns(tdl);
-        List<Pattern> combined = new ArrayList<Pattern>();
+        List<Pattern> primary = ExtractPrimaryPatterns(semanticGraph.typedDependencies());
+
+        List<Pattern> combined;
         combined = ExtractCombinedPatterns(primary, primary);
         combined.addAll(ExtractCombinedPatterns(combined, primary));
         combined.addAll(ExtractCombinedPatterns(combined, primary));
