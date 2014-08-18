@@ -55,6 +55,10 @@ public class Pattern {
         return head + " " + headTag + " " + modifier + " " + modifierTag + " " + relation;
     }
 
+    public String toSentences() {
+        return head + " . " + modifier;
+    }
+
     public boolean isPrimaryPattern() {
         switch (relation) {
             case amod:
