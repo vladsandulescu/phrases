@@ -6,27 +6,20 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
 
+import java.util.*;
+
 public class Extract {
 
-    final static String ParserModelPath = "edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz";
-
-    public static void main(String[] args) {
-        try {
-            Extract.run(new FileReader("d:/review.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<Pattern> run(Reader text) {
-
-        LexicalizedParser parser = LexicalizedParser.loadModel(ParserModelPath);
-        TreebankLanguagePack tlp = new PennTreebankLanguagePack();
-        GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
-
+    public List<Pattern> run(String text) {
         List<Pattern> patterns = new ArrayList<Pattern>();
-        for (List<HasWord> sentence : new DocumentPreprocessor(text)) {
-            patterns.addAll(ExtractSentencePatterns(parser, gsf, sentence));
+
+        Properties props = new Properties();
+        props.setProperty("annotators", "tokenize, ssplit, pos, parse");
+        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+        Annotation annotation = pipeline.process(text);
+        List<CoreMap> sentences = annotation.get(CoreAnnotations.SentencesAnnotation.class);
+        for (CoreMap sentence : sentences) {
+            patterns.addAll(ExtractSentencePatterns(sentence));
         }
 
         return patterns;
