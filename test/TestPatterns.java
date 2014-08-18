@@ -1,7 +1,6 @@
 import junit.framework.Assert;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.util.List;
 
 public class TestPatterns {
@@ -14,7 +13,7 @@ public class TestPatterns {
         Pattern goal1 = new Pattern("zoom", "great", Pattern.Relation.aspect);
         Pattern goal2 = new Pattern("resolution", "great", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("This camera has great zoom and resolution."));
+        List<Pattern> patterns = new Extract().run("This camera has great zoom and resolution.");
 
         Assert.assertTrue(patterns.contains(goal1));
         Assert.assertTrue(patterns.contains(goal2));
@@ -27,7 +26,7 @@ public class TestPatterns {
     public void Pattern2() {
         Pattern goal = new Pattern("camera case", "nice", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("The camera case looks nice."));
+        List<Pattern> patterns = new Extract().run("The camera case looks nice.");
 
         Assert.assertTrue(patterns.contains(goal));
     }
@@ -40,7 +39,7 @@ public class TestPatterns {
         Pattern goal1 = new Pattern("screen", "wide", Pattern.Relation.aspect);
         Pattern goal2 = new Pattern("screen", "clear", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("The screen is wide and clear."));
+        List<Pattern> patterns = new Extract().run("The screen is wide and clear.");
 
         Assert.assertTrue(patterns.contains(goal1));
         Assert.assertTrue(patterns.contains(goal2));
@@ -53,7 +52,7 @@ public class TestPatterns {
     public void Pattern4() {
         Pattern goal = new Pattern("picture quality", "love", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("I love the picture quality."));
+        List<Pattern> patterns = new Extract().run("I love the picture quality.");
 
         Assert.assertTrue(patterns.contains(goal));
     }
@@ -66,7 +65,7 @@ public class TestPatterns {
         Pattern goal1 = new Pattern("zoom", "great", Pattern.Relation.aspect);
         Pattern goal2 = new Pattern("resolution", "great", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("This camera has great zoom and resolution."));
+        List<Pattern> patterns = new Extract().run("This camera has great zoom and resolution.");
 
         Assert.assertTrue(patterns.contains(goal1));
         Assert.assertTrue(patterns.contains(goal2));
@@ -80,7 +79,7 @@ public class TestPatterns {
         Pattern goal1 = new Pattern("screen", "wide", Pattern.Relation.aspect);
         Pattern goal2 = new Pattern("screen", "clear", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("The screen is wide and clear."));
+        List<Pattern> patterns = new Extract().run("The screen is wide and clear.");
 
         Assert.assertTrue(patterns.contains(goal1));
         Assert.assertTrue(patterns.contains(goal2));
@@ -94,7 +93,7 @@ public class TestPatterns {
     public void Pattern7() {
         Pattern goal = new Pattern("battery life", "not long", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("The battery life is not long"));
+        List<Pattern> patterns = new Extract().run("The battery life is not long");
 
         Assert.assertTrue(patterns.contains(goal));
     }
@@ -106,7 +105,7 @@ public class TestPatterns {
     public void Pattern8() {
         Pattern goal = new Pattern("camera case", "nice", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("The camera case looks nice."));
+        List<Pattern> patterns = new Extract().run("The camera case looks nice.");
 
         Assert.assertTrue(patterns.contains(goal));
     }
@@ -118,7 +117,7 @@ public class TestPatterns {
     public void Pattern9() {
         Pattern goal = new Pattern("picture quality", "love", Pattern.Relation.aspect);
 
-        List<Pattern> patterns = Extract.run(new StringReader("I love the picture quality."));
+        List<Pattern> patterns = new Extract().run("I love the picture quality.");
 
         Assert.assertTrue(patterns.contains(goal));
     }
