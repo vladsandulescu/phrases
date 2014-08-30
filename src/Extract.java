@@ -98,4 +98,16 @@ public class Extract {
 
         return results;
     }
+    private List<String> LoadStopwords() throws IOException {
+        List<String> words = new ArrayList<String>();
+
+        BufferedReader br = new BufferedReader(new FileReader(stopwordsFile));
+        String line;
+        while ((line = br.readLine()) != null) {
+            words.add(line);
+        }
+        br.close();
+
+        return words;
+    }
 }
