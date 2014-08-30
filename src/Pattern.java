@@ -66,24 +66,24 @@ public class Pattern {
     public boolean isPrimaryPattern() {
         switch (relation) {
             case amod:
-                return headTag.startsWith("NN") && modifierTag.startsWith("JJ");
+                return headTag.equals("NN") && modifierTag.startsWith("JJ");
             case acomp:
                 return headTag.startsWith("VB") && modifierTag.startsWith("JJ");
             case nsubj:
-                return headTag.startsWith("VB") && modifierTag.startsWith("NN")
-                        || headTag.startsWith("JJ") && modifierTag.startsWith("NN")
+                return headTag.startsWith("VB") && modifierTag.equals("NN")
+                        || headTag.startsWith("JJ") && modifierTag.equals("NN")
                         || headTag.startsWith("VB") && modifierTag.startsWith("PR");
             case cop:
                 return headTag.startsWith("JJ") && modifierTag.startsWith("VB");
             case dobj:
-                return headTag.startsWith("VB") && modifierTag.startsWith("NN");
+                return headTag.startsWith("VB") && modifierTag.equals("NN");
             case conj_and:
-                return headTag.startsWith("NN") && modifierTag.startsWith("NN")
+                return headTag.equals("NN") && modifierTag.equals("NN")
                         || headTag.startsWith("JJ") && modifierTag.startsWith("JJ");
             case neg:
                 return (headTag.startsWith("JJ") || headTag.startsWith("VB"));
             case nn:
-                return headTag.startsWith("NN") && modifierTag.startsWith("NN");
+                return headTag.equals("NN") && modifierTag.equals("NN");
         }
 
         return false;
@@ -124,11 +124,11 @@ public class Pattern {
     }
 
     private Pattern TryCombineAspectWithNn(Pattern pattern) {
-        if (pattern.head == head && pattern.modifierTag.startsWith("NN")) {
+        if (pattern.head == head && pattern.modifierTag.equals("NN")) {
 
             return new Pattern(pattern.modifier + " " + head, headTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
-        if (pattern.modifier == head && pattern.headTag.startsWith("NN")) {
+        if (pattern.modifier == head && pattern.headTag.equals("NN")) {
 
             return new Pattern(head + " " + pattern.head, headTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
@@ -147,7 +147,7 @@ public class Pattern {
     }
 
     private Pattern TryCombineAspectWithConjAnd(Pattern pattern) {
-        if (pattern.head == head && pattern.modifierTag.startsWith("NN")) {
+        if (pattern.head == head && pattern.modifierTag.equals("NN")) {
 
             return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
@@ -179,7 +179,7 @@ public class Pattern {
         for (Pattern pattern : patterns) {
             if (pattern.relation == Pattern.Relation.nsubj
                     && pattern.headTag.startsWith("JJ")
-                    && pattern.modifierTag.startsWith("NN")
+                    && pattern.modifierTag.equals("NN")
                     && pattern.head.equals(head)) {
 
                 return new Pattern(pattern.modifier, pattern.modifierTag, head, headTag, Relation.aspect, this, pattern);
@@ -193,7 +193,7 @@ public class Pattern {
         for (Pattern pattern : patterns) {
             if (pattern.relation == Pattern.Relation.nsubj
                     && pattern.headTag.startsWith("VB")
-                    && pattern.modifierTag.startsWith("NN")
+                    && pattern.modifierTag.equals("NN")
                     && pattern.head.equals(head)) {
 
                 return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect, this, pattern);
