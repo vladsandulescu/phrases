@@ -55,6 +55,10 @@ public class Pattern {
         return head + " " + headTag + " " + modifier + " " + modifierTag + " " + relation;
     }
 
+    public String toAspect() {
+        return head + " " + modifier;
+    }
+
     public String toSentences() {
         return head + " . " + modifier;
     }
