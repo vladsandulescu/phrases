@@ -85,6 +85,35 @@ public class TestPatterns {
         Assert.assertTrue(patterns.contains(goal2));
     }
 
+    /**
+     * 6. < h,m1 > +conj_and(m1,m2)→< h,m2 >
+     */
+    @Test
+    public void Pattern61() {
+        Pattern goal1 = new Pattern("screen", "love", Pattern.Relation.aspect);
+        Pattern goal2 = new Pattern("screen", "hate", Pattern.Relation.aspect);
+
+        List<Pattern> patterns = new Extract().run("I love and hate the screen.");
+
+        Assert.assertTrue(patterns.contains(goal1));
+        Assert.assertTrue(patterns.contains(goal2));
+    }
+
+    /**
+     * 6. < h,m1 > +conj_and(m1,m2)→< h,m2 >
+     *     This is a shortcoming of the dependency parser as it does not detect acomp
+     */
+    @Test
+    public void Pattern62() {
+        Pattern goal1 = new Pattern("screen", "love", Pattern.Relation.aspect);
+        Pattern goal2 = new Pattern("camera case", "love", Pattern.Relation.aspect);
+
+        List<Pattern> patterns = new Extract().run("I love the screen and the camera case.");
+
+        Assert.assertTrue(patterns.contains(goal1));
+        Assert.assertTrue(patterns.contains(goal2));
+    }
+
 
     /**
      * 7. < h,m > +neg(m,not)→< h, not+m >
