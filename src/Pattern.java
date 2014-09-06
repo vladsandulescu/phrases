@@ -79,7 +79,8 @@ public class Pattern {
                 return headTag.startsWith("VB") && modifierTag.equals("NN");
             case conj_and:
                 return headTag.equals("NN") && modifierTag.equals("NN")
-                        || headTag.startsWith("JJ") && modifierTag.startsWith("JJ");
+                        || headTag.startsWith("JJ") && modifierTag.startsWith("JJ")
+                        || headTag.startsWith("VB") && modifierTag.startsWith("VB");
             case neg:
                 return (headTag.startsWith("JJ") || headTag.startsWith("VB"));
             case nn:
