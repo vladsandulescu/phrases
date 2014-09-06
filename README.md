@@ -77,59 +77,46 @@ Given a real-life user review:
 <br />
 *Great food and atmosphere.  Plenty of TVs to watch the games. The chef and his partners just opened this great location. Pumpkin Soup with pumpkin oil and croutons is such a great start to the Fall season. Wood fired oven pumping out flatbreads. Sweet Potato gnocchi made in house with roasted corn and gorgonzola crema is unbelievable. Very impressive selection of beer handles and delicious cocktails. Amazing view of the sunset as well. Can't wait to return.*
 
-<br />
 the extracted opinion phrases were:
 <br />
 ["atmosphere Great", "food Great", "location great", "start great", "corn roasted", "gorgonzola crema roasted", "selection impressive", "view Amazing"]
 
-<br />
 Pretty good right?
 
-<br />
 Here's another one:
 <br />
 *This place is amazing. I come here at least once a month & am never disappointed. Food & service is always great. The buffalo burger it TDF as well as the bruschetta. Outside seating is so cute with a lights (great for date nights) live music inside is a wonderful touch. This place is great to meet with friends, family or date night.*
 
-<br />
 opinion phrases:
 <br />
 ["place amazing", "service great", "burger buffalo", "seating cute", "touch wonderful", "seating Outside", "place great"]
 
-<br />
 By now, it should be pretty obvious to see how easier aggregating after specific aspects such as *place* and *service* is.
 
-<br />
 Another one:
 <br />
 *The mailing pack that was sent to me was very thorough and well explained,correspondence from the shop was prompt and accurate,I opted for the cheque payment method which was swift in getting to me. All in all, a fast efficient service that I had the upmost confidence in,very professionally executed and I will suggest you to my friends when there mobiles are due for recycling :-)*
 
-<br />
 opinion phrases:
 <br />
 ["correspondence, prompt", "correspondence, accurate", "service, efficient"]
 
-<br />
 OK, one more and that's it:
 <br />
 *Aside from the wait to order and the other wait to get your food!  I was there for a late lunch on Friday and I opted to forgo my usual salad choice and go for the eggplant parm sandwich - yum!  Each bite of perfectly crusted eggplant had the most amazing tangy tomato sauce and melted cheese and it was oh so dlvine!  I had it on wheat bread and finished my entire sandwich (and yes, I ordered a full size!)  What a treat! Don't try to special order at the restaurant - my boyfriend attempted to create his own sandwich and what he ended up with was nothing close to what he ordered. I can't wait to go back to 'make my own pizza' - i know about that thanks to him! I have a feeling that I'll be visiting this place quite a bit since I'm now living in the area after a recent move.  It's a good thing - well, it's a tasty thing, maybe not so good for the waistline!*
 
-<br />
 opinion phrases:
 <br />
 ["salad choice usual", "lunch late", "salad choice forgo", "tomato sauce amazing", "eggplant crusted", "tomato sauce tangy", "sandwich finished", "sandwich entire", "size ordered", "size full", "sandwich create", "order special", "pizza make", "move recent", "bit visiting", "thing good", "thing tasty"]
     
-<br />
 In this last one, you may notice phrases like *thing good*, *sandwich entire*, *sandwich finished* and *sandwich create*, which don't really help much in any aggregation, so it would be nice to eliminate them.
 This could easily be done by cleverly and time-consumingly shove words like *thing*, *entire* and *create* into the stopwords list. Otherwise, the LDA model should filter these out, assuming a lot of people don't mention the exact phrases.
 
-<br />
 Check out the [code repository](https://github.com/vladsandulescu/phrases), try extracting opinion phrases by running the code yourself and don't forget to tweet to me if you have any comments.
 
-<br />
 The code is written in Java and it requires Stanford CoreNLP 3.4, Stanford Parser, JUnit and Mongo Java driver (if you plan to run it over many reviews stored in Mongo, because why wouldn't you already keep the reviews in Mongo right?). 
 If you do not want to use Mongo, just call the *run* method in *Extract* class giving it the text to extract opinion phrases from.
 
-<br />
 That is basically it. 
 
 ==================
