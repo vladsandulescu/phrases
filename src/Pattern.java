@@ -82,6 +82,7 @@ public class Pattern {
                         || headTag.startsWith("JJ") && modifierTag.startsWith("JJ")
                         || headTag.startsWith("VB") && modifierTag.startsWith("VB");
             case neg:
+            case conj_but:
                 return (headTag.startsWith("JJ") || headTag.startsWith("VB"));
             case nn:
                 return headTag.equals("NN") && modifierTag.equals("NN");
@@ -106,6 +107,9 @@ public class Pattern {
                     switch (pattern.relation) {
                         case conj_and:
                             newAspect = TryCombineAspectWithConjAnd(pattern);
+                            break;
+                        case conj_but:
+                            newAspect = TryCombineAspectWithConjBut(pattern);
                             break;
                         case neg:
                             newAspect = TryCombineAspectWithNeg(pattern);
@@ -152,11 +156,22 @@ public class Pattern {
 
             return new Pattern(pattern.modifier, pattern.modifierTag, modifier, modifierTag, Relation.aspect, this, pattern);
         }
+
         if (pattern.head == modifier
                 && (pattern.modifierTag.startsWith("JJ")
                 || pattern.modifierTag.startsWith("VB"))) {
 
             return new Pattern(head, headTag, pattern.modifier, pattern.modifierTag, Relation.aspect, this, pattern);
+        }
+
+        return null;
+    }
+
+    private Pattern TryCombineAspectWithConjBut(Pattern pattern) {
+        if (pattern.head == modifier
+                && (pattern.modifierTag.startsWith("RB"))) {
+
+            return new Pattern(head, headTag, pattern.modifier + " " + pattern.head, pattern.headTag, Relation.aspect, this, pattern);
         }
 
         return null;
@@ -216,6 +231,7 @@ public class Pattern {
         dobj,
         conj_and,
         neg,
+        conj_but,
         nn,
         aspect
     }

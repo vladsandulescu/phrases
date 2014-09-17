@@ -128,6 +128,20 @@ public class TestPatterns {
     }
 
     /**
+     * 7. < h,m > +neg(m,not)→< h, not+m >
+     */
+    @Test
+    public void Pattern71() {
+        //Pattern goal1 = new Pattern("battery life", "good", Pattern.Relation.aspect);
+        Pattern goal2 = new Pattern("battery life", "not great", Pattern.Relation.aspect);
+
+        List<Pattern> patterns = new Extract().run("The battery life was good but not great");
+
+        //Assert.assertTrue(patterns.contains(goal1));
+        Assert.assertTrue(patterns.contains(goal2));
+    }
+
+    /**
      * 8. < h,m > +nn(h,N)→< N +h,m >
      */
     @Test
